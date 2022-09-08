@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Map Explorer</title>
+    <link rel="stylesheet" href="./css/normalize.css" />
+    <link rel="stylesheet" href="./css/styles.styl" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+    </style>     
+  </head>
+  <body>
+    <script type="module" src="./js/index.js"></script>
+    <div id="wrapper">
+      <div id="help">
+        <h1>WolfWorld</h1>
+        <p>You are searching for the fabled 🏆, but there are 🐺 chasing you!</p>
+        <p>
+          Your health will deteriorate slowly over time, unless you recharge it at the ⛺️.<br/>
+          <span class="arrows">😀<em>→</em>🥵<em>→</em>🪦</span> (RIP)
+        </p>
+        <p>Press the arrow keys to move. When you 🪦, press “R” to restart.</p>
+        <ul>
+          <li><span>🏆</span>The Golden Chalice.  <em>It’s somewhere on the map. If you touch it, you win.</em></li>
+          <li><span>🐺</span> Wolves. <em>When they catch you, they will kill you; but first, they must catch you.</em></li>
+          <li><span>⛺</span> Campsite. <em>Return here to rest. Wolves can still get you inside your tent.</em></li>
+          <li><span>🏔</span> Obstacles. <em>You can’t go through mountains, but wolves can.</em></li>
+        </ul>
+        <p class="bottom"><em>Press ESC to start the game.</em></p>        
+      </div>
+      <div id="map"></div>
+    </div>
+  </body>
+</html>

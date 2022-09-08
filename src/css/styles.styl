@@ -1,0 +1,227 @@
+:root
+  --rows 60
+  --cols 60
+  --cellSize 6rem // was 5
+  
+* 
+  box-sizing: border-box
+  
+::-webkit-scrollbar,
+::-webkit-scrollbar-button
+  display none
+
+html
+  font-size 62.5%
+
+body
+  height: 100vh
+  width: 100vw
+  font-size: 1.6rem;
+  font-family: 'Roboto', sans-serif;  
+  overflow hidden
+  display flex
+  align-items center
+  justify-content center
+  background-color darkslategray
+  background-position center
+  background-size cover
+#map
+  -ms-overflow-style none
+  scroll-behavior smooth
+  overflow hidden
+  display grid
+  max-width 100rem
+  border-radius .6rem
+  max-height 50rem  
+  margin 4rem
+  grid-template-rows repeat(var(--rows), 1fr)
+  grid-template-columns repeat(var(--cols), 1fr)
+  box-shadow 0 1rem 10rem rgba(0,0,0,.5)
+  [data-is-treasure="true"]
+    &:before
+      content '🏆' !important
+      animation bob 1.25s infinite ease .625s
+  [data-is-treasure="true"][data-is-player="true"]
+    position relative
+    &:before
+      content '😀' !important
+      animation-play-state paused !important
+    &:after
+      content '🏆'
+      position absolute
+      text-shadow 0rem 0rem 3rem rgba(255,215,0, 1)      
+      animation: victory 1s .25s 1 forwards 
+
+#wrapper
+  position relative
+#help
+  font-size 1.8rem
+  display none
+  position absolute
+  width 100%
+  max-width 100rem
+  height 100%
+  max-height 50rem
+  top 4rem
+  left 4rem
+  z-index 100
+  border-radius .6rem
+  padding 6rem 16rem
+  color #fff
+  background-color rgba(26,32,42,.98)
+  .arrows
+    display inline-block
+    margin-top 1rem
+    em
+      display inline-block
+      margin 0 .4rem
+  p
+    margin .8rem 0 1.2rem
+    &.bottom
+      margin-top 2rem
+  ul
+    list-style none
+    padding 0
+    margin 0
+    li
+      margin .4rem 0 .6rem
+      span
+        display inline-block
+        margin-right 1rem
+  em
+    color rgba(255,255,255,.5)
+    font-style normal
+  &.shown
+    display flex
+    flex-direction column
+    justify-content center
+
+
+// enemies
+[data-is-enemy="true"]
+  &:before
+    // animation bob 3s ease 1s infinite
+  &[data-enemy-type="wolf"]
+    &:before
+      content '🐺' !important
+  &[data-enemy-type="gorilla"]
+    &:before
+      content '🦍' !important
+  &[data-enemy-type="tiger"]
+    &:before
+      content '🐅' !important
+  &[data-enemy-type="poodle"]
+    &:before
+      content '🐩' !important
+  &[data-enemy-type="raccoon"]
+    &:before
+      content '🦝' !important  
+  &[data-enemy-type="hippopotamus"]
+    &:before
+      content '🦛' !important
+  &[data-enemy-type="t-rex"]
+    &:before
+      content '🦖' !important 
+  &[data-enemy-type="clown"]
+    &:before
+      content '🤡' !important 
+  &[data-enemy-type="skull"]
+    &:before
+      content '💀' !important 
+  &[data-enemy-type="ogre"]
+    &:before
+      content '👹' !important 
+  &[data-enemy-type="robot"]
+    &:before
+      content '🤖' !important        
+  &[data-direction="right"]
+    transform scale3d(-1, 1, 1)
+
+// biomes
+.biome
+  display flex
+  height var(--cellSize)
+  width var(--cellSize)
+  align-items center
+  justify-content center 
+  font-size 4rem
+  height var(--cellSize)
+  width var(--cellSize)    
+  &[data-biome-name="forest"]
+    background-color MediumSeaGreen
+    &.forest0
+      &:before
+        content '🌲'
+    &.forest1
+      &:before
+        content '🌳'
+    &.forest2
+      &:before
+        content '🌲'
+    &.forest3
+      &:before
+        content '🌲'                           
+  &[data-biome-name="mountain"]
+    background-color LightSteelBlue
+    &.mountain0
+      &:before
+        content '🗻'
+    &.mountain1
+      &:before
+        content '⛰️'
+    &.mountain2
+      &:before
+        content '🏔️'
+  &[data-biome-name="desert"]
+    background-color Wheat
+    &.desert0
+      &:before
+        content '🐫'
+  &[data-biome-name="ocean"]
+    background-color SteelBlue      
+  &[data-biome-name="campsite"]
+    background-color MediumSeaGreen
+    &.campsite
+      &:before
+        content '⛺'    
+// player
+[data-is-player="true"]
+  text-shadow 0rem .1rem .1rem rgba(0,0,0,.5)
+  &:before
+    animation bob 1.25s infinite ease
+    transform scale(1.025, .975) translateY(.1rem)
+  &[data-health="10"]&:before
+    content '😀' !important
+  &[data-health="9"]&:before
+    content '😅' !important
+  &[data-health="8"]&:before
+    content '🙂' !important
+  &[data-health="7"]&:before
+    content '😐' !important
+  &[data-health="6"]&:before
+    content '😕' !important
+  &[data-health="5"]&:before
+    content '🙁' !important
+  &[data-health="4"]&:before
+    content '😧' !important
+  &[data-health="3"]&:before
+    content '😧' !important
+  &[data-health="2"]&:before
+    content '😰' !important
+  &[data-health="1"]&:before
+    content '🥵' !important
+  &[data-health="0"]&:before
+    content '🪦' !important
+  &[data-health ^="-"]&:before
+    content '🪦' !important
+
+// animations
+@keyframes bob
+  50% 
+    transform scale(.95, 1.15) translateY(-.75rem)
+    text-shadow 0rem .75rem .45rem rgba(0,0,0,.5)
+  
+@keyframes victory
+  to
+    transform translate3d(0,-90%, 0) scale3d(1.3, 1.3, 1.3)
+    text-shadow 0rem 0rem 5rem rgba(255,215,0, 1)

@@ -1,0 +1,11 @@
+{
+  "name": "wolfworld",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@parcel/transformer-stylus": "2.3.1",
+    "parcel": "^2.3.1"
+  },
+  "dependencies": {}
+}
