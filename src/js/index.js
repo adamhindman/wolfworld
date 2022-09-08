@@ -330,7 +330,7 @@ const setupMap = () => {
 
 const startCountdownToDeath = () => {
   if (!paused){
-    countdownToDeath = setInterval(() => {
+    let countdownToDeath = setInterval(() => {
       decrementHealth();
       moveEnemies();
       if (isPlayerDead()) {
@@ -348,7 +348,7 @@ const isPlayerDead = () => {
   return isExhausted || isMauled;
 };
 
-const showHelpText = () => { 
+const showHelpText = () => {
   helpScreenVisible = true;
   paused = true
   document.querySelector("#help").classList.add("shown")
