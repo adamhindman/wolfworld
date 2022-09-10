@@ -54,7 +54,7 @@ body
 
 #wrapper
   position relative
-#help
+#help, #death-screen, #victory-screen
   font-size 1.8rem
   display none
   position absolute
@@ -95,6 +95,11 @@ body
     display flex
     flex-direction column
     justify-content center
+#death-screen, #victory-screen
+  &.shown
+    align-items center
+    justify-content center
+
 
 
 // enemies
@@ -205,9 +210,9 @@ body
   &[data-health="4"]&:before
     content '😧' !important
   &[data-health="3"]&:before
-    content '😧' !important
-  &[data-health="2"]&:before
     content '😰' !important
+  &[data-health="2"]&:before
+    content '🥵' !important
   &[data-health="1"]&:before
     content '🥵' !important
   &[data-health="0"]&:before
@@ -215,6 +220,11 @@ body
   &[data-health ^="-"]&:before
     content '🪦' !important
 
+// items
+&[data-item-type="berry"]
+  &:before
+    content '🫐' !important
+      
 // animations
 @keyframes bob
   50% 

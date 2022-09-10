@@ -6,11 +6,15 @@ const rows = Number(style.getPropertyValue("--rows"));
 const cols = Number(style.getPropertyValue("--cols"));
 const startHealth = 10;
 const numberOfEnemies = 10;
+const numberOfHealthItems = 3
+const playerSpawnZoneSize = 4
 const playerQuery = "[data-is-player='true']";
 const enemyQuery = "[data-is-enemy='true']";
 const treasureQuery = "[data-is-treasure='true']";
+const berryQuery = "[data-item-type='berry']";
 let helpScreenVisible = false;
 let paused = false;
+let countdownToDeath = ""
 
 let currentEnemy = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
 
@@ -39,6 +43,15 @@ const checkEnemyCollision = () => {
   }
 };
 
+const checkItemCollision = () => {
+  if (document.querySelectorAll(`${playerQuery}${berryQuery}`).length > 0) {
+    setPlayerHealth(10);
+    const location = getPlayerElement().dataset
+    delete location.isItem
+    delete location.itemType
+  }  
+}
+
 const checkValidKeys = (event) => {
   const movementKeys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
   const menuKeys = ["r", "R", "?", "Escape"];
@@ -62,7 +75,8 @@ const checkValidKeys = (event) => {
 };
 
 const checkForResting = setInterval(() => {
-  if (getPlayerElement().dataset.biomeName === "campsite" && !paused) {
+  const location = getPlayerElement().dataset
+  if (location.biomeName === "campsite" && !paused) {
     const health = getPlayerHealth();
     health < 10 ? setPlayerHealth(health + 1) : setPlayerHealth(health);
   }
@@ -192,17 +206,28 @@ const setPlayerCoords = (nextCoords) => {
   getElementFromCoords(currCoords).dataset.isPlayer = "false";
   getElementFromCoords(nextCoords).dataset.isPlayer = "true";
   setPlayerHealth(getElementFromCoords(currCoords).dataset.health);
+  checkItemCollision()
   scrollToPlayer();
   checkEnemyCollision();
   if (isVictory(nextCoords)) {
     clearInterval(countdownToDeath);
+    showVictoryScreen()
   }
 };
 
+const showDeathScreen = () => {
+  setTimeout(() => { document.getElementById("death-screen").classList.add("shown")}, 1000)
+}
+const showVictoryScreen = () => {
+  setTimeout(() => { document.getElementById("victory-screen").classList.add("shown")}, 1000)
+}
 const setPlayerHealth = (health) => {
   const coords = getPlayerCoords();
   getElementFromCoords(coords).dataset.health = health;
   health <= 0 ? (getPlayerElement().dataset.isDead = "true") : null;
+  if(isPlayerDead()){
+    showDeathScreen()
+  }
 };
 
 const setPlayerStartConditions = () => {
@@ -271,7 +296,6 @@ const moveEnemies = () => {
         moveEnemyTo(enemy, coords, direction);
       }
     });
-  
   }
 };
 
@@ -301,19 +325,38 @@ const populateBiomes = () => {
   });
 };
 
+
 const populateEnemies = () => {
   // todo: ensure same number of enemies when there's a collision with player. currently if the 
   // coordinates intersect with the player, we just move on to the next wolf
-  const playerElement = document.querySelector(playerQuery);
   for (let i = 0; i < numberOfEnemies; i++) {
     const randomCoords = getRandomCoords();
-    if (!isArrayEqual(randomCoords, getCoordsFromElement(playerElement))) {
+    if (!insideSpawnZone(randomCoords)){
       let ds = getElementFromCoords(randomCoords).dataset;
       ds.isEnemy = "true";
       ds.enemyType = currentEnemy;
     }
   }
 };
+
+const insideSpawnZone = p2 => {
+  const p1 = getPlayerCoords()
+  const distance = Math.round(Math.sqrt(Math.pow((p1[0] - p2[0]), 2) + ((p1[1] - p2[1]), 2)))
+  return distance < playerSpawnZoneSize
+}
+
+const populateHealthItems = () => {
+  const treasureLocation = document.querySelector(treasureQuery)
+  for (let i = 0; i < numberOfHealthItems; i++) {
+    const randomCoords = getRandomCoords();
+    if (!insideSpawnZone(randomCoords) && (randomCoords !== treasureLocation)){
+      let ds = getElementFromCoords(randomCoords).dataset;
+      ds.isItem = "true";
+      ds.itemType = "berry";
+      ds.biomeName = "forest" 
+    }
+  }
+}
 
 const setupCampsites = () => {
   const campsiteEl = getPlayerElement();
@@ -322,15 +365,9 @@ const setupCampsites = () => {
   campsiteEl.classList.add("biome", "campsite");
 };
 
-const setupMap = () => {
-  // let map = document.createElement("div");
-  // map.setAttribute("id", "map");
-  // document.body.appendChild(map);
-};
-
 const startCountdownToDeath = () => {
   if (!paused){
-    let countdownToDeath = setInterval(() => {
+    countdownToDeath = setInterval(() => {
       decrementHealth();
       moveEnemies();
       if (isPlayerDead()) {
@@ -352,6 +389,7 @@ const showHelpText = () => {
   helpScreenVisible = true;
   paused = true
   document.querySelector("#help").classList.add("shown")
+  localStorage.setItem("hasSeenHelpText", "true")
 }
 const hideHelpText = () => {
   helpScreenVisible = false 
@@ -359,10 +397,16 @@ const hideHelpText = () => {
   document.querySelector("#help").classList.remove("shown")
 }
 
+const showHelpTextOnStartup = () => {
+  const shouldShowHelpText = localStorage.getItem("hasSeenHelpText") === "true" ? false : true;
+  if (shouldShowHelpText) {
+    showHelpText()
+  }
+}
+
 // init
 const init = () => {
   console.clear();
-  // setupMap();
   populateBiomes();
   decorateBiomes();
   setPlayerStartConditions();
@@ -371,8 +415,9 @@ const init = () => {
   createListeners();
   populateEnemies();
   setupCampsites();
+  populateHealthItems();
   startCountdownToDeath();
-  showHelpText();  
+  showHelpTextOnStartup();  
 };
 
 init();
