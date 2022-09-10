@@ -216,10 +216,10 @@ const setPlayerCoords = (nextCoords) => {
 };
 
 const showDeathScreen = () => {
-  setTimeout(() => { document.getElementById("death-screen").classList.add("shown")}, 1000)
+  setTimeout(() => { document.getElementById("death-screen").classList.add("shown")}, 2000)
 }
 const showVictoryScreen = () => {
-  setTimeout(() => { document.getElementById("victory-screen").classList.add("shown")}, 1000)
+  setTimeout(() => { document.getElementById("victory-screen").classList.add("shown")}, 2000)
 }
 const setPlayerHealth = (health) => {
   const coords = getPlayerCoords();
